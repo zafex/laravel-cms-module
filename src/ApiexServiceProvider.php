@@ -14,7 +14,7 @@ class ApiexServiceProvider extends LaravelServiceProvider
 
         $this->commands('apiex.command.admin-creator');
         $this->commands('apiex.command.adminrole-generator');
-        $this->commands('apiex.command.privilege-generator');
+        $this->commands('apiex.command.permission-generator');
     }
 
     public function register()
@@ -33,8 +33,8 @@ class ApiexServiceProvider extends LaravelServiceProvider
             return new Commands\AdminroleGenerator;
         });
 
-        $this->app->bind('apiex.command.privilege-generator', function () {
-            return new Commands\PrivilegeGenerator;
+        $this->app->bind('apiex.command.permission-generator', function () {
+            return new Commands\PermissionGenerator;
         });
     }
 }

@@ -24,12 +24,12 @@ class UserPermission extends Migration
     public function up()
     {
         Schema::create('user_permission', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('user_id')->index();
-            $table->unsignedInteger('privilege_id')->index();
-            $table->unsignedInteger('object_id')->index();
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->index();
+            $table->unsignedBigInteger('permission_id')->index();
+            $table->unsignedBigInteger('object_id')->index();
             $table->timestamps();
-            $table->unique(['privilege_id', 'user_id', 'object_id']);
+            $table->unique(['user_id', 'permission_id', 'object_id']);
         });
     }
 }

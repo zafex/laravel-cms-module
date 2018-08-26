@@ -24,11 +24,12 @@ class UserInfo extends Migration
     public function up()
     {
         Schema::create('user_info', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('user_id')->index();
-            $table->string('name')->index();
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->index();
+            $table->string('section')->index();
             $table->text('value');
             $table->timestamps();
+            $table->unique(['user_id', 'section']);
         });
     }
 }

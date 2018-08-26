@@ -3,8 +3,7 @@
 namespace Apiex\Commands;
 
 use Apiex\Entities\Privilege;
-use Apiex\Entities\PrivilegeRole;
-use Apiex\Entities\Role;
+use Apiex\Entities\PrivilegeAssignment;
 use Illuminate\Console\Command;
 
 class AdminroleGenerator extends Command
@@ -12,7 +11,7 @@ class AdminroleGenerator extends Command
     /**
      * @var string
      */
-    protected $description = 'Generate role with all privileges';
+    protected $description = 'Generate role with all permissions';
 
     /**
      * @var string
@@ -24,20 +23,21 @@ class AdminroleGenerator extends Command
         $raw = $this->argument('name');
         $description = $this->option('description') ?: $raw;
         $name = preg_replace('/[^a-z0-9\.]+/', '-', strtolower($raw));
-        $role = Role::firstOrCreate([
-            'name' => $name,
+        $section = 'role';
+        $role = Privilege::updateOrCreate(compact('name', 'section'), [
             'description' => $description,
         ]);
         $this->info('Created role ' . $name . ' (desc: ' . $description . ')');
 
-        // get all privileges
-        $privileges = Privilege::all();
-        foreach ($privileges as $privilege) {
-            $assign = PrivilegeRole::firstOrCreate([
-                'privilege_id' => $privilege->id,
+        // get all permissions
+        $permissions = Privilege::where('section', 'permission')->get();
+
+        foreach ($permissions as $permission) {
+            $assign = PrivilegeAssignment::firstOrCreate([
                 'role_id' => $role->id,
+                'permission_id' => $permission->id,
             ]);
-            $this->info('Assigned privilege ' . $privilege->name . ' to ' . $name);
+            $this->info('Assigned permission ' . $permission->name . ' to ' . $name);
         }
     }
 }

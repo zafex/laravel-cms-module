@@ -24,8 +24,8 @@ class AuditDetail extends Migration
     public function up()
     {
         Schema::create('audit_detail', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('audit_id')->index();
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('audit_id')->index();
             $table->string('field')->index();
             $table->text('old_value');
             $table->text('new_value');

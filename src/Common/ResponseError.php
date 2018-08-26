@@ -24,7 +24,7 @@ class ResponseError
             [
                 "error" => [
                     'resource' => 'exception',
-                    'message' => $exception->getMessage() ?: $httpStatusMessage,
+                    'detail' => $exception->getMessage() ?: $httpStatusMessage,
                     "code" => $exception->getCode(),
                 ],
             ],
@@ -43,7 +43,7 @@ class ResponseError
             [
                 "error" => [
                     'resource' => 'unexpected',
-                    'message' => $message,
+                    'detail' => $message,
                 ],
             ],
         ];
@@ -65,7 +65,7 @@ class ResponseError
                     'error' => [
                         'resource' => $resource,
                         'field' => $key,
-                        'message' => $message,
+                        'detail' => $message,
                     ],
                 ];
             }

@@ -24,11 +24,11 @@ class Audit extends Migration
     public function up()
     {
         Schema::create('audit', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('user_id')->index();
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->index();
             $table->string('referer')->index();
             $table->string('model')->index();
-            $table->unsignedInteger('model_id')->index();
+            $table->unsignedBigInteger('model_id')->index();
             $table->string('action')->index();
             $table->text('browser');
             $table->timestamps();

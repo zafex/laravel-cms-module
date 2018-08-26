@@ -25,13 +25,21 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'permissions',
     ];
 
     /**
      * @var string
      */
     protected $table = 'user';
+
+    /**
+     * @return mixed
+     */
+    public function details()
+    {
+        return $this->hasMany(UserInfo::class);
+    }
 
     public function getJWTCustomClaims()
     {
@@ -51,31 +59,15 @@ class User extends Authenticatable implements JWTSubject
     /**
      * @return mixed
      */
-    public function infoDetails()
-    {
-        return $this->hasMany(UserInfo::class);
-    }
-
-    /**
-     * @return mixed
-     */
     public function permissions()
     {
-        return $this->hasMany(UserPermission::class);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function privileges()
-    {
         return $this->hasManyThrough(
-            PrivilegeRole::class,
-            RoleUser::class,
+            PrivilegeAssignment::class,
+            PrivilegeUser::class,
             'user_id', // key on role_user for user
-            'role_id', // key on privilege_role for role_user
+            'role_id', // key on type role for role_user
             'id', // key on user for role user
-            'role_id' // key on role_uer for privilege_role
+            'role_id' // key on role_uer for type privilege
         );
     }
 
@@ -84,6 +76,6 @@ class User extends Authenticatable implements JWTSubject
      */
     public function roles()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Privilege::class);
     }
 }

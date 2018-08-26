@@ -2,8 +2,8 @@
 
 namespace Apiex\Commands;
 
-use Apiex\Entities\Role;
-use Apiex\Entities\RoleUser;
+use Apiex\Entities\Privilege;
+use Apiex\Entities\PrivilegeUser;
 use Apiex\Entities\User;
 use Exception;
 use Illuminate\Console\Command;
@@ -27,12 +27,12 @@ class AdminCreator extends Command
      */
     public function handle()
     {
-        $roles = Role::all()->map(function ($role) {
+        $roles = Privilege::where('section', 'role')->get()->map(function ($role) {
             return $role->name;
         })->toArray();
 
         $roleName = $this->choice('Select Role Admin', $roles);
-        $role = Role::where('name', $roleName)->first();
+        $role = Privilege::where('name', $roleName)->where('section', 'role')->first();
 
         $name = $this->ask('Type your username');
         $email = $this->ask('Type your email');
@@ -72,7 +72,7 @@ class AdminCreator extends Command
                     'email' => $email,
                     'password' => Hash::make($password),
                 ]);
-                $roleUser = RoleUser::create([
+                $roleUser = PrivilegeUser::create([
                     'role_id' => $role->id,
                     'user_id' => $user->id,
                 ]);

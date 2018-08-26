@@ -24,11 +24,12 @@ trait Registration
             return app('ResponseError')->sendValidation($validator, 'register');
         }
 
-        $user = User::create([
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password')),
-        ]);
+        $user = new User;
+        $user->name = $request->get('name');
+        $user->email = $request->get('email');
+        $user->password = Hash::make($request->get('password'));
+        $user->save();
+
         $token = JWTAuth::fromUser($user);
 
         return app('ResponseSingular')->send(compact('user', 'token'), 201);

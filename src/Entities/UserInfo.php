@@ -4,10 +4,17 @@ namespace Apiex\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserMeta extends Model
+class UserInfo extends Model
 {
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'section', 'value', 'user_id',
+    ];
+
     /**
      * @var string
      */
-    protected $table = 'user_meta';
+    protected $table = 'user_info';
 }

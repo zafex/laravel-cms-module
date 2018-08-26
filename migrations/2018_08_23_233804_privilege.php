@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RoleUser extends Migration
+class Privilege extends Migration
 {
     /**
      * Reverse the migrations.
@@ -13,7 +13,7 @@ class RoleUser extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('privilege');
     }
 
     /**
@@ -23,12 +23,13 @@ class RoleUser extends Migration
      */
     public function up()
     {
-        Schema::create('role_user', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('role_id')->index();
-            $table->unsignedInteger('user_id')->index();
+        Schema::create('privilege', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name')->index();
+            $table->string('section')->default('role')->index();
+            $table->text('description');
             $table->timestamps();
-            $table->unique(['role_id', 'user_id']);
+            $table->unique(['name', 'section']);
         });
     }
 }

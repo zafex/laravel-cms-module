@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Privilege extends Migration
+class PrivilegeAssignment extends Migration
 {
     /**
      * Reverse the migrations.
@@ -13,7 +13,7 @@ class Privilege extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('privilege');
+        Schema::dropIfExists('privilege_assignment');
     }
 
     /**
@@ -23,11 +23,12 @@ class Privilege extends Migration
      */
     public function up()
     {
-        Schema::create('privilege', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->unique();
-            $table->text('description');
+        Schema::create('privilege_assignment', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('role_id')->index();
+            $table->unsignedBigInteger('permission_id')->index();
             $table->timestamps();
+            $table->unique(['role_id', 'permission_id']);
         });
     }
 }
