@@ -1,0 +1,21 @@
+{
+    "name": "zafex/lara-apicms",
+    "description": "Laravel Api CMS.",
+    "type": "package",
+    "license": "MIT",
+    "authors": [{
+        "name": "Fajrul Akbar Zuhdi",
+        "email": "fajrulaz@gmail.com"
+    }],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Apiex\\": "src/"
+        }
+    },
+    "require": {
+        "tymon/jwt-auth": "dev-develop",
+        "lcobucci/jwt": "^3.2",
+        "ramsey/uuid": "^3.8"
+    }
+}
