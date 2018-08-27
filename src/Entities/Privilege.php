@@ -17,4 +17,12 @@ class Privilege extends Model
      * @var string
      */
     protected $table = 'privilege';
+
+    /**
+     * @return mixed
+     */
+    public function childRelations()
+    {
+        return $this->hasMany(PrivilegeAssignment::class, 'role_id', 'id');
+    }
 }

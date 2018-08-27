@@ -27,6 +27,7 @@ class User extends Migration
             $table->bigIncrements('id');
             $table->string('name')->unique();
             $table->string('email')->unique();
+            $table->integer('status')->default(0)->index();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

@@ -24,6 +24,10 @@ class ResponseCollection
             'logref' => $this->createLogref(),
             'type' => 'collection',
         ]);
-        return $this->createCollection('items', $status, $collections, $meta, $headers, $options);
+        $items = [];
+        foreach ($collections as $data) {
+            $items[]['data'] = $data;
+        }
+        return $this->createCollection('items', $status, $items, $meta, $headers, $options);
     }
 }

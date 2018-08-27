@@ -3,36 +3,25 @@
 namespace Apiex\Actions\User;
 
 use Apiex\Entities\User;
-use Apiex\Entities\UserInfo;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
-trait Information
+trait MemberUpdate
 {
     /**
-     * @param Request $request
-     */
-    public function detail(Request $request)
-    {
-        $user = auth()->user()->load('details');
-
-        return app('ResponseSingular')->send($user);
-    }
-
-    /**
-     * @param Request $request
+     * @param  Request $request
+     * @return mixed
      */
     public function update(Request $request)
     {
         try {
-
-            $user = auth()->user();
-            $user_id = $user->id;
-
             $rules = [];
+            $user_id = $request->get('id');
+            $user = User::where('id', $user_id)->first();
+
             if ($request->has('name')) {
                 $rules['name'] = [
                     'required',
@@ -62,7 +51,6 @@ trait Information
 
             if ($rules) {
                 $validator = Validator::make($request->only(['name', 'email', 'password', 'password_confirmation']), $rules);
-
                 if ($validator->fails()) {
                     return app('ResponseError')->sendValidation($validator, 'update');
                 }
@@ -74,7 +62,6 @@ trait Information
                 if ($request->has('password')) {
                     $user->password = Hash::make($request->get('password'));
                 }
-
                 $user->save();
             }
 
@@ -83,7 +70,6 @@ trait Information
                     'value' => $value ?: '',
                 ]);
             }
-
             return app('ResponseSingular')->send('User was successfully updated.');
 
         } catch (Exception $e) {

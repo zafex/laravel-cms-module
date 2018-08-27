@@ -59,8 +59,8 @@ class ResponseError
     public function sendValidation(ValidatorInterface $validator, $resource = 'Common', $httpStatusCode = 400): JsonResponse
     {
         $errors = [];
-        foreach ($validator->errors()->toArray() as $key => $errors) {
-            foreach ($errors as $message) {
+        foreach ($validator->errors()->toArray() as $key => $messages) {
+            foreach ($messages as $message) {
                 $errors[] = [
                     'error' => [
                         'resource' => $resource,

@@ -70,6 +70,7 @@ class AdminCreator extends Command
                 $user = User::create([
                     'name' => $name,
                     'email' => $email,
+                    'status' => 1,
                     'password' => Hash::make($password),
                 ]);
                 $roleUser = PrivilegeUser::create([

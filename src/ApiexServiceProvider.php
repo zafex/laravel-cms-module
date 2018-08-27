@@ -2,6 +2,8 @@
 
 namespace Apiex;
 
+use Apiex\Entities;
+use Apiex\Observers\AuditLog;
 use Tymon\JWTAuth\Providers\LaravelServiceProvider;
 
 class ApiexServiceProvider extends LaravelServiceProvider
@@ -15,6 +17,13 @@ class ApiexServiceProvider extends LaravelServiceProvider
         $this->commands('apiex.command.admin-creator');
         $this->commands('apiex.command.adminrole-generator');
         $this->commands('apiex.command.permission-generator');
+
+        Entities\Privilege::observe(AuditLog::class);
+        Entities\PrivilegeAssignment::observe(AuditLog::class);
+        Entities\PrivilegeUser::observe(AuditLog::class);
+        Entities\User::observe(AuditLog::class);
+        Entities\UserInfo::observe(AuditLog::class);
+        Entities\UserPermission::observe(AuditLog::class);
     }
 
     public function register()

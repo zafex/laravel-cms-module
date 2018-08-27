@@ -12,7 +12,7 @@ trait MemberList
      */
     public function index(Request $request)
     {
-        $users = User::paginate($request->query('page-size') ?: 10);
+        $users = User::paginate($request->query('per_page') ?: 10);
         $items = [];
         foreach ($users as $user) {
             $items[] = $user;
