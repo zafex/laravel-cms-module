@@ -2,8 +2,7 @@
 
 namespace Apiex\Actions\User;
 
-use Apiex\Entities\User;
-use Apiex\Entities\UserInfo;
+use Apiex\Entities;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -79,7 +78,7 @@ trait Information
             }
 
             foreach ($request->except(['name', 'email', 'password', 'password_confirmation']) as $section => $value) {
-                UserInfo::updateOrCreate(compact('user_id', 'section'), [
+                Entities\UserInfo::updateOrCreate(compact('user_id', 'section'), [
                     'value' => $value ?: '',
                 ]);
             }

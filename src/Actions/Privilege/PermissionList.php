@@ -2,7 +2,7 @@
 
 namespace Apiex\Actions\Privilege;
 
-use Apiex\Entities\Privilege;
+use Apiex\Entities;
 use Illuminate\Http\Request;
 
 trait PermissionList
@@ -12,7 +12,7 @@ trait PermissionList
      */
     public function index(Request $request)
     {
-        $model = Privilege::where('section', 'permission')->paginate($request->query('per_page') ?: 10);
+        $model = Entities\Privilege::where('section', 'permission')->paginate($request->query('per_page') ?: 10);
         $items = [];
         foreach ($model as $object) {
             $items[] = $object;

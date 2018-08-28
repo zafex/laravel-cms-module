@@ -2,7 +2,7 @@
 
 namespace Apiex\Actions\User;
 
-use Apiex\Entities\User;
+use Apiex\Entities;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,7 +20,7 @@ trait MemberUpdate
         try {
             $rules = [];
             $user_id = $request->get('id');
-            $user = User::where('id', $user_id)->first();
+            $user = Entities\User::where('id', $user_id)->first();
 
             if ($request->has('name')) {
                 $rules['name'] = [
@@ -66,7 +66,7 @@ trait MemberUpdate
             }
 
             foreach ($request->except(['name', 'email', 'password', 'password_confirmation']) as $section => $value) {
-                UserInfo::updateOrCreate(compact('user_id', 'section'), [
+                Entities\UserInfo::updateOrCreate(compact('user_id', 'section'), [
                     'value' => $value ?: '',
                 ]);
             }

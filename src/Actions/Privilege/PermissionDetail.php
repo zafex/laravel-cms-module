@@ -2,7 +2,7 @@
 
 namespace Apiex\Actions\Privilege;
 
-use Apiex\Entities\Privilege;
+use Apiex\Entities;
 use Illuminate\Http\Request;
 
 trait PermissionDetail
@@ -12,7 +12,7 @@ trait PermissionDetail
      */
     public function detail(Request $request)
     {
-        if ($permission = Privilege::where('section', 'permission')->where('id', $request->get('id'))->first()) {
+        if ($permission = Entities\Privilege::where('section', 'permission')->where('id', $request->get('id'))->first()) {
             return app('ResponseSingular')->send($permission);
         }
         return app('ResponseError')->sendMessage('Role not found', 404);

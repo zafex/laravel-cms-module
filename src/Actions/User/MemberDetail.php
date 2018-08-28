@@ -2,7 +2,7 @@
 
 namespace Apiex\Actions\User;
 
-use Apiex\Entities\User;
+use Apiex\Entities;
 use Illuminate\Http\Request;
 
 trait MemberDetail
@@ -12,7 +12,7 @@ trait MemberDetail
      */
     public function detail(Request $request)
     {
-        if ($user = User::where('id', $request->get('id'))->first()) {
+        if ($user = Entities\User::where('id', $request->get('id'))->first()) {
             $user->load(['details', 'roles']);
             return app('ResponseSingular')->send($user);
         }

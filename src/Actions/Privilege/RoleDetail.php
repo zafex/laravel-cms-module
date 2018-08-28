@@ -2,7 +2,7 @@
 
 namespace Apiex\Actions\Privilege;
 
-use Apiex\Entities\Privilege;
+use Apiex\Entities;
 use Illuminate\Http\Request;
 
 trait RoleDetail
@@ -12,7 +12,7 @@ trait RoleDetail
      */
     public function detail(Request $request)
     {
-        if ($role = Privilege::where('section', 'role')->where('id', $request->get('id'))->first()) {
+        if ($role = Entities\Privilege::where('section', 'role')->where('id', $request->get('id'))->first()) {
             $role->load('childRelations');
             return app('ResponseSingular')->send($role);
         }

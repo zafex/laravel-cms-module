@@ -2,7 +2,7 @@
 
 namespace Apiex\Actions\Privilege;
 
-use Apiex\Entities\Privilege;
+use Apiex\Entities;
 use Illuminate\Http\Request;
 
 trait RoleList
@@ -12,7 +12,7 @@ trait RoleList
      */
     public function index(Request $request)
     {
-        $model = Privilege::where('section', 'role')->paginate($request->query('per_page') ?: 10);
+        $model = Entities\Privilege::where('section', 'role')->paginate($request->query('per_page') ?: 10);
         $items = [];
         foreach ($model as $object) {
             $object->load('childRelations');

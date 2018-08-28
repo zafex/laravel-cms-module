@@ -2,6 +2,7 @@
 
 namespace Apiex\Actions\Auth;
 
+use Apiex\Entities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -24,7 +25,7 @@ trait Registration
             return app('ResponseError')->sendValidation($validator, 'register');
         }
 
-        $user = new User;
+        $user = new Entities\User;
         $user->name = $request->get('name');
         $user->email = $request->get('email');
         $user->password = Hash::make($request->get('password'));

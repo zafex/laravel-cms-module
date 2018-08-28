@@ -2,7 +2,7 @@
 
 namespace Apiex\Actions\User;
 
-use Apiex\Entities\User;
+use Apiex\Entities;
 use Illuminate\Http\Request;
 
 trait MemberList
@@ -12,7 +12,7 @@ trait MemberList
      */
     public function index(Request $request)
     {
-        $users = User::paginate($request->query('per_page') ?: 10);
+        $users = Entities\User::paginate($request->query('per_page') ?: 10);
         $items = [];
         foreach ($users as $user) {
             $items[] = $user;
