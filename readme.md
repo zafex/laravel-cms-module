@@ -1,4 +1,5 @@
 
+
 standard response rest based on https://developers.getbase.com
 
 **Requirement :**
@@ -47,3 +48,34 @@ php artisan apiex:generate-role-admin
 ```
 php artisan apiex:create-admin
 ```
+
+## Actions
+**Apiex\Actions\Auth**
+Controller
+```php
+<?php
+
+namespace App\Http\Controllers;
+use Apiex\Actions\Auth;
+class AuthController extends Controller
+{
+	use Auth\Authentication;
+	use Auth\Registration;
+}
+```
+Route
+```php
+Route::post('/login', 'UserController@authenticate')->name('auth.user.login');
+Route::post('/register', 'UserController@register')->name('auth.user.register');
+```
+More Actions..
+
+**Apiex\Actions\Audit\LogList**
+- index (for listing logs)
+
+**Apiex\Actions\Audit\LogDetail**
+- detail (for individual detail logs)
+
+**Apiex\Actions\User\Information**
+- detail (for individual detail current user login)
+- update (for update user login)
