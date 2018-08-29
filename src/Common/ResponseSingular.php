@@ -10,20 +10,37 @@ class ResponseSingular
     use ResponseTrait;
 
     /**
-     * @param $item
-     * @param $status
-     * @param array      $headers
-     * @param $options
+     * @return mixed
      */
-    public function send($item, $status = 200, array $headers = [], $options = 0): JsonResponse
+    public function getItem()
     {
+        return $this->item;
+    }
+
+    /**
+     * @param $httpStatusCode
+     */
+    public function send($httpStatusCode = 200): JsonResponse
+    {
+        $this->withMeta([
+            'http_status' => array_get($this->createMeta($httpStatusCode), 'http_status'),
+            'logref' => $this->createLogref(),
+        ]);
         $data = [
-            'data' => $item,
-            'meta' => [
-                'http_status' => array_get($this->createMeta($status), 'http_status'),
-                'logref' => $this->createLogref(),
-            ],
+            'data' => $this->getItem(),
+            'meta' => $this->fetchMeta(),
         ];
-        return new JsonResponse($data, $status, $headers, $options);
+        $headers = $this->getHeaders();
+        $this->resetVars();
+        return new JsonResponse($data, $httpStatusCode, $headers);
+    }
+
+    /**
+     * @param $item
+     */
+    public function setItem($item)
+    {
+        $this->item = $item;
+        return $this;
     }
 }

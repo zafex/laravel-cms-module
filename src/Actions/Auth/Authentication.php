@@ -22,17 +22,17 @@ trait Authentication
         ]);
 
         if ($validator->fails()) {
-            return app('ResponseError')->sendValidation($validator, 'authenticate');
+            return app('ResponseError')->withValidation($validator, 'authenticate')->send();
         }
 
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
-                return app('ResponseError')->sendMessage(__('invalid_credentials'), 400);
+                return app('ResponseError')->withMessage(__('invalid_credentials'))->send(400);
             }
         } catch (JWTException $e) {
-            return app('ResponseError')->sendMessage(__('could_not_create_token'), 500);
+            return app('ResponseError')->withMessage(__('could_not_create_token'))->send(500);
         }
 
-        return app('ResponseSingular')->send($token);
+        return app('ResponseSingular')->setItem($token)->send(200);
     }
 }

@@ -18,7 +18,7 @@ trait Information
     {
         $user = auth()->user()->load('details');
 
-        return app('ResponseSingular')->send($user);
+        return app('ResponseSingular')->setItem($user)->send();
     }
 
     /**
@@ -63,7 +63,7 @@ trait Information
                 $validator = Validator::make($request->only(['name', 'email', 'password', 'password_confirmation']), $rules);
 
                 if ($validator->fails()) {
-                    return app('ResponseError')->sendValidation($validator, 'update');
+                    return app('ResponseError')->withValidation($validator, 'update')->send();
                 }
 
                 foreach ($request->only(['name', 'email']) as $field => $value) {
@@ -83,10 +83,10 @@ trait Information
                 ]);
             }
 
-            return app('ResponseSingular')->send('User was successfully updated.');
+            return app('ResponseSingular')->setItem(__('update_success'))->send();
 
         } catch (Exception $e) {
-            return app('ResponseError')->sendException($e);
+            return app('ResponseError')->withException($e)->send();
         }
     }
 }

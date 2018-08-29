@@ -5,71 +5,83 @@ namespace Apiex\Common;
 use Apiex\Methods\ResponseTrait;
 use Exception;
 use Illuminate\Contracts\Validation\Validator as ValidatorInterface;
-use Illuminate\Http\JsonResponse;
 
 class ResponseError
 {
     use ResponseTrait;
 
     /**
+     * @param  $httpStatusCode
+     * @return mixed
+     */
+    public function send($httpStatusCode = 400)
+    {
+        $this->withMeta([
+            'http_status' => array_get($this->createMeta($httpStatusCode), 'http_status'),
+            'logref' => $this->createLogref(),
+        ]);
+        $collections = [];
+        foreach ($this->collections as $data) {
+            $collections[] = $data;
+        }
+        $meta = $this->fetchMeta();
+        $headers = $this->getHeaders();
+        $this->resetVars();
+        return $this->createCollection('errors', $httpStatusCode, $collections, $meta, $headers);
+    }
+
+    /**
      * @param  Exception $exception
      * @return mixed
      */
-    public function sendException(Exception $exception): JsonResponse
+    public function withException(Exception $exception): ResponseError
     {
         $httpStatusCode = method_exists($exception, 'getStatusCode') ? ($exception->getStatusCode() ?: 404): 500;
         $httpStatusMessage = array_get($this->createMeta($httpStatusCode), 'status_message');
 
-        $errors = [
-            [
-                "error" => [
-                    'resource' => 'exception',
-                    'detail' => $exception->getMessage() ?: $httpStatusMessage,
-                    "code" => $exception->getCode(),
-                ],
+        array_push($this->collections, [
+            "error" => [
+                'resource' => get_class($exception),
+                'detail' => $exception->getMessage() ?: $httpStatusMessage,
+                "code" => $exception->getCode(),
             ],
-        ];
-        return $this->createCollection('errors', $httpStatusCode, $errors, ['http_status' => array_get($this->createMeta($httpStatusCode), 'http_status')]);
+        ]);
+        return $this;
     }
 
     /**
      * @param  $message
-     * @param  $status
      * @return mixed
      */
-    public function sendMessage($message, $httpStatusCode = 400): JsonResponse
+    public function withMessage($message, $resource = 'unexpected'): ResponseError
     {
-        $errors = [
-            [
-                "error" => [
-                    'resource' => 'unexpected',
-                    'detail' => $message,
-                ],
+        array_push($this->collections, [
+            "error" => [
+                'resource' => $resource,
+                'detail' => $message,
             ],
-        ];
-        return $this->createCollection('errors', $httpStatusCode, $errors, ['http_status' => array_get($this->createMeta($httpStatusCode), 'http_status')]);
+        ]);
+        return $this;
     }
 
     /**
      * @param  ValidatorInterface $validator
      * @param  $resource
-     * @param  $status
      * @return mixed
      */
-    public function sendValidation(ValidatorInterface $validator, $resource = 'Common', $httpStatusCode = 400): JsonResponse
+    public function withValidation(ValidatorInterface $validator, $resource = 'Common'): ResponseError
     {
-        $errors = [];
         foreach ($validator->errors()->toArray() as $key => $messages) {
             foreach ($messages as $message) {
-                $errors[] = [
+                array_push($this->collections, [
                     'error' => [
                         'resource' => $resource,
                         'field' => $key,
                         'detail' => $message,
                     ],
-                ];
+                ]);
             }
         }
-        return $this->createCollection('errors', $httpStatusCode, $errors, ['http_status' => array_get($this->createMeta($httpStatusCode), 'http_status')]);
+        return $this;
     }
 }

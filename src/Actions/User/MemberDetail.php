@@ -14,8 +14,8 @@ trait MemberDetail
     {
         if ($user = Entities\User::where('id', $request->get('id'))->first()) {
             $user->load(['details', 'roles']);
-            return app('ResponseSingular')->send($user);
+            return app('ResponseSingular')->setItem($user)->send();
         }
-        return app('ResponseError')->sendMessage('User not found', 404);
+        return app('ResponseError')->withMessage(__('user_not_found'))->send(404);
     }
 }

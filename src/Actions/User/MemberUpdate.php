@@ -52,7 +52,7 @@ trait MemberUpdate
             if ($rules) {
                 $validator = Validator::make($request->only(['name', 'email', 'password', 'password_confirmation']), $rules);
                 if ($validator->fails()) {
-                    return app('ResponseError')->sendValidation($validator, 'update');
+                    return app('ResponseError')->withValidation($validator, 'update')->send();
                 }
 
                 foreach ($request->only(['name', 'email']) as $field => $value) {
@@ -70,10 +70,10 @@ trait MemberUpdate
                     'value' => $value ?: '',
                 ]);
             }
-            return app('ResponseSingular')->send('User was successfully updated.');
+            return app('ResponseSingular')->setItem(__('User was successfully updated.'))->send();
 
         } catch (Exception $e) {
-            return app('ResponseError')->sendException($e);
+            return app('ResponseError')->withException($e)->send();
         }
     }
 }

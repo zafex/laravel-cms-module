@@ -13,13 +13,8 @@ trait RoleList
     public function index(Request $request)
     {
         $model = Entities\Privilege::where('section', 'role')->paginate($request->query('per_page') ?: 10);
-        $items = [];
-        foreach ($model as $object) {
-            $object->load('childRelations');
-            $items[] = $object;
-        }
-
-        return app('ResponseCollection')->send($items, 200, [
+        $response = app('ResponseCollection');
+        $response->withMeta([
             'count' => $model->total(),
             'per_page' => $model->perPage(),
             'current_page' => $model->currentPage(),
@@ -31,5 +26,11 @@ trait RoleList
                 'prev_page' => $model->previousPageUrl(),
             ],
         ]);
+        foreach ($model as $object) {
+            $object->load('childRelations');
+            $response->addCollection($object);
+        }
+
+        return $response->send(200);
     }
 }

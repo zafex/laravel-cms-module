@@ -13,12 +13,8 @@ trait LogList
     public function index(Request $request)
     {
         $model = LogModel::paginate($request->query('per_page') ?: 10);
-        $items = [];
-        foreach ($model as $object) {
-            $items[] = $object;
-        }
-
-        return app('ResponseCollection')->send($items, 200, [
+        $response = app('ResponseCollection');
+        $response->withMeta([
             'count' => $model->total(),
             'per_page' => $model->perPage(),
             'current_page' => $model->currentPage(),
@@ -30,5 +26,10 @@ trait LogList
                 'prev_page' => $model->previousPageUrl(),
             ],
         ]);
+        foreach ($model as $object) {
+            $response->addCollection($object);
+        }
+
+        return $response->send(200);
     }
 }

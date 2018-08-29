@@ -13,8 +13,8 @@ trait PermissionDetail
     public function detail(Request $request)
     {
         if ($permission = Entities\Privilege::where('section', 'permission')->where('id', $request->get('id'))->first()) {
-            return app('ResponseSingular')->send($permission);
+            return app('ResponseSingular')->setItem($permission)->send();
         }
-        return app('ResponseError')->sendMessage('Role not found', 404);
+        return app('ResponseError')->withMessage(__('permission_not_found'))->send(404);
     }
 }

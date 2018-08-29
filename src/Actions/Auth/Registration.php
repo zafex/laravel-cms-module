@@ -22,7 +22,7 @@ trait Registration
         ]);
 
         if ($validator->fails()) {
-            return app('ResponseError')->sendValidation($validator, 'register');
+            return app('ResponseError')->withValidation($validator, 'register')->send();
         }
 
         $user = new Entities\User;
@@ -33,6 +33,6 @@ trait Registration
 
         $token = JWTAuth::fromUser($user);
 
-        return app('ResponseSingular')->send(compact('user', 'token'), 201);
+        return app('ResponseSingular')->setItem(compact('user', 'token'))->send(201);
     }
 }

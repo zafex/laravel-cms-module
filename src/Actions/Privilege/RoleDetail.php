@@ -14,8 +14,8 @@ trait RoleDetail
     {
         if ($role = Entities\Privilege::where('section', 'role')->where('id', $request->get('id'))->first()) {
             $role->load('childRelations');
-            return app('ResponseSingular')->send($role);
+            return app('ResponseSingular')->setItem($role)->send();
         }
-        return app('ResponseError')->sendMessage('Role not found', 404);
+        return app('ResponseError')->withMessage(__('role_not_found'))->send(404);
     }
 }

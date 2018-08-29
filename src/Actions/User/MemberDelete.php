@@ -14,12 +14,12 @@ trait MemberDelete
     {
         $user_id = $request->get('id');
         if ($user_id == auth()->user()->id) {
-            return app('ResponseError')->sendMessage('Cannot delete your self', 403);
+            return app('ResponseError')->withMessage(__('Cannot delete your self'))->send(403);
         } elseif ($user = Entities\User::where('id', $user_id)->first()) {
             $user->status = 0;
             $user->save();
-            return app('ResponseSingular')->send('User was successfully deleted.');
+            return app('ResponseSingular')->setItem(__('User was successfully deleted.'))->send();
         }
-        return app('ResponseError')->sendMessage('User not found', 404);
+        return app('ResponseError')->withMessage(__('user_not_found'))->send(404);
     }
 }

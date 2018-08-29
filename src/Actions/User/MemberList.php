@@ -13,12 +13,8 @@ trait MemberList
     public function index(Request $request)
     {
         $users = Entities\User::paginate($request->query('per_page') ?: 10);
-        $items = [];
-        foreach ($users as $user) {
-            $items[] = $user;
-        }
-
-        return app('ResponseCollection')->send($items, 200, [
+        $response = app('ResponseCollection');
+        $response->withMeta([
             'count' => $users->total(),
             'per_page' => $users->perPage(),
             'current_page' => $users->currentPage(),
@@ -30,5 +26,10 @@ trait MemberList
                 'prev_page' => $users->previousPageUrl(),
             ],
         ]);
+        foreach ($users as $user) {
+            $response->addCollection($user);
+        }
+
+        return $response->send();
     }
 }

@@ -136,7 +136,7 @@ for send response as singular or like detail page.
 ```php
 public function detail(Request $request)
 {
-    return app('ResponseSingular')->send(['name' => 'dor']);
+    return app('ResponseSingular')->setItem(['name' => 'dor'])->send(200);
 }
 ```
 
@@ -146,10 +146,10 @@ for send response as collection or like index page
 ```php
 public function index(Request $request)
 {
-    return app('ResponseCollection')->send([
-        0 => ['name' => 'dor-1'],
-        1 => ['name' => 'dor-2']
-    ]);
+    return app('ResponseCollection')
+        ->addCollection(['name' => 'dor-1'])
+        ->addCollection(['name' => 'dor-1'])
+        ->send();
 }
 ```
 
@@ -161,16 +161,16 @@ for send response error as collection.
 public function exception()
 {
     $e = new Exception('this is error exception');
-    return app('ResponseError')->sendException($e);
+    return app('ResponseError')->withException($e)->send();
 }
 public function message()
 {
-    return app('ResponseError')->sendMessage('this is error exception');
+    return app('ResponseError')->withMessage('this is error message')->send();
 }
 public function validation()
 {
     if ($validator->fails()) {
-        return app('ResponseError')->sendValidation($validator);
+        return app('ResponseError')->withValidation($validator)->send();
     }
 }
 ``` 

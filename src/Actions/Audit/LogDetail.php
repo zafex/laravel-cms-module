@@ -14,8 +14,8 @@ trait LogDetail
     {
         if ($audit = LogModel::where('id', $request->get('id'))->first()) {
             $audit->load('details');
-            return app('ResponseSingular')->send($audit);
+            return app('ResponseSingular')->setItem($audit)->send(200);
         }
-        return app('ResponseError')->sendMessage('Log not found', 404);
+        return app('ResponseError')->withMessage(__('log_not_found'))->send(404);
     }
 }
