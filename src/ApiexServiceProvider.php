@@ -34,16 +34,8 @@ class ApiexServiceProvider extends LaravelServiceProvider
         $this->app->bind('ResponseSingular', Common\ResponseSingular::class);
         $this->app->bind('ResponseCollection', Common\ResponseCollection::class);
 
-        $this->app->bind('apiex.command.admin-creator', function () {
-            return new Commands\AdminCreator;
-        });
-
-        $this->app->bind('apiex.command.adminrole-generator', function () {
-            return new Commands\AdminroleGenerator;
-        });
-
-        $this->app->bind('apiex.command.permission-generator', function () {
-            return new Commands\PermissionGenerator;
-        });
+        $this->app->bind('apiex.command.admin-creator', Commands\AdminCreator::class);
+        $this->app->bind('apiex.command.adminrole-generator', Commands\AdminroleGenerator::class);
+        $this->app->bind('apiex.command.permission-generator', Commands\PermissionGenerator::class);
     }
 }
