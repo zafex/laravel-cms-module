@@ -49,26 +49,63 @@ php artisan apiex:generate-role-admin
 php artisan apiex:create-admin
 ```
 
+-------------------------------------------------------------------------
+
 ## Actions
-**Apiex\Actions\Auth**
-Controller
+**Apiex\Actions\Auth\Authentication && Apiex\Actions\Auth\Registration**
+create Controller
 ```php
 <?php
 
 namespace App\Http\Controllers;
+
 use Apiex\Actions\Auth;
+
 class AuthController extends Controller
 {
+	// trait Auth\Authentication has one method authenticate(for create jwt token)
 	use Auth\Authentication;
+
+	// trait Auth\Registration has one method register (for user signup)
 	use Auth\Registration;
 }
 ```
-Route
+create Route
 ```php
+// route name is required
 Route::post('/login', 'UserController@authenticate')->name('auth.user.login');
 Route::post('/register', 'UserController@register')->name('auth.user.register');
 ```
+
+**Apiex\Actions\User\Information**
+
+trait User\Information has two method:
+- detail (for get detail information from current user login)
+- update (for update detail information on current user login)
+
+create Controller
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Apiex\Actions\User;
+
+class MeController extends Controller
+{
+	use User\Information;
+}
+```
+create Route
+```php
+// route name is required
+// use middleware api.token for verify jwt token and user permission
+Route::get('/me', 'MeController@detail')->middleware('api.token')->name('me.detail');
+Route::post('/me/update', 'MeController@update')->middleware('api.token')->name('me.update');
+```
+
 More Actions..
+
 
 **Apiex\Actions\Audit\LogList**
 - index (for listing logs)
@@ -76,6 +113,14 @@ More Actions..
 **Apiex\Actions\Audit\LogDetail**
 - detail (for individual detail logs)
 
-**Apiex\Actions\User\Information**
-- detail (for individual detail current user login)
-- update (for update user login)
+**Apiex\Actions\User\MemberList**
+- index (for user list)
+
+**Apiex\Actions\User\MemberDetail**
+- detail (for individual detail user)
+
+**Apiex\Actions\User\MemberUpdate**
+- update (for update individual user)
+
+**Apiex\Actions\User\MemberDelete**
+- delete (for change status user to inactive or 0)
