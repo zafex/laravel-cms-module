@@ -1,5 +1,6 @@
 
 
+
 standard response rest based on https://developers.getbase.com
 
 **Requirement :**
@@ -53,7 +54,9 @@ php artisan apiex:create-admin
 
 ## Actions
 **Apiex\Actions\Auth\Authentication && Apiex\Actions\Auth\Registration**
+
 create Controller
+
 ```php
 <?php
 
@@ -63,11 +66,11 @@ use Apiex\Actions\Auth;
 
 class AuthController extends Controller
 {
-	// trait Auth\Authentication has one method authenticate(for create jwt token)
-	use Auth\Authentication;
+    // trait Auth\Authentication has one method authenticate(for create jwt token)
+    use Auth\Authentication;
 
-	// trait Auth\Registration has one method register (for user signup)
-	use Auth\Registration;
+    // trait Auth\Registration has one method register (for user signup)
+    use Auth\Registration;
 }
 ```
 create Route
@@ -93,7 +96,7 @@ use Apiex\Actions\User;
 
 class MeController extends Controller
 {
-	use User\Information;
+    use User\Information;
 }
 ```
 create Route
@@ -124,3 +127,50 @@ More Actions..
 
 **Apiex\Actions\User\MemberDelete**
 - delete (for change status user to inactive or 0)
+
+## Responses
+
+**ResponseSingular**
+
+for send response as singular or like detail page.
+```php
+public function detail(Request $request)
+{
+    return app('ResponseSingular')->send(['name' => 'dor']);
+}
+```
+
+**ResponseCollection**
+
+for send response as collection or like index page
+```php
+public function index(Request $request)
+{
+    return app('ResponseCollection')->send([
+        0 => ['name' => 'dor-1'],
+        1 => ['name' => 'dor-2']
+    ]);
+}
+```
+
+**ResponseError**
+
+for send response error as collection.
+
+```php
+public function exception()
+{
+    $e = new Exception('this is error exception');
+    return app('ResponseError')->sendException($e);
+}
+public function message()
+{
+    return app('ResponseError')->sendMessage('this is error exception');
+}
+public function validation()
+{
+    if ($validator->fails()) {
+        return app('ResponseError')->sendValidation($validator);
+    }
+}
+``` 
