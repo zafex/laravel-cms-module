@@ -32,9 +32,9 @@ trait RoleCreate
                 return app('ResponseError')->withValidation($validator, 'create_role')->send();
             }
 
-            $role = new Entities\Role;
-            $role->name = $required->get('name');
-            $role->description = $required->get('description');
+            $role = new Entities\Privilege;
+            $role->name = $request->get('name');
+            $role->description = $request->get('description');
             $role->section = 'role';
             $role->save();
 

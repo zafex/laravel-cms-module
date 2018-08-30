@@ -33,8 +33,8 @@ trait PermissionCreate
             }
 
             $permission = new Entities\Privilege;
-            $permission->name = $required->get('name');
-            $permission->description = $required->get('description');
+            $permission->name = $request->get('name');
+            $permission->description = $request->get('description');
             $permission->section = 'permission';
             $permission->save();
 

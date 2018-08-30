@@ -40,8 +40,8 @@ trait RoleUpdate
                 return app('ResponseError')->withValidation($validator, 'update_role')->send();
             }
 
-            $role->name = $required->get('name');
-            $role->description = $required->get('description');
+            $role->name = $request->get('name');
+            $role->description = $request->get('description');
             $role->save();
 
             return app('ResponseSingular')->setItem(__('Roles was successfully updated.'))->send();

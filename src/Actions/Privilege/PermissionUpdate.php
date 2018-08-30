@@ -40,8 +40,8 @@ trait PermissionUpdate
                 return app('ResponseError')->withValidation($validator, 'update_permission')->send();
             }
 
-            $permission->name = $required->get('name');
-            $permission->description = $required->get('description');
+            $permission->name = $request->get('name');
+            $permission->description = $request->get('description');
             $permission->save();
 
             return app('ResponseSingular')->setItem(__('Permission was successfully updated.'))->send();
