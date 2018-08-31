@@ -47,6 +47,7 @@ class ApiexServiceProvider extends LaravelServiceProvider
             $path . '/audit.php' => database_path("migrations/{$prefix}_audit.php"),
             $path . '/audit_detail.php' => database_path("migrations/{$prefix}_audit_detail.php"),
             $path . '/menu.php' => database_path("migrations/{$prefix}_menu.php"),
+            $path . '/menu_item.php' => database_path("migrations/{$prefix}_menu_item.php"),
             $path . '/privilege.php' => database_path("migrations/{$prefix}_privilege.php"),
             $path . '/privilege_assignment.php' => database_path("migrations/{$prefix}_privilege_assignment.php"),
             $path . '/privilege_user.php' => database_path("migrations/{$prefix}_privilege_user.php"),
