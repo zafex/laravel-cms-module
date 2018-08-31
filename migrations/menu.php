@@ -26,22 +26,14 @@ class Menu extends Migration
         if (!Schema::hasTable('menu')) {
             Schema::create('menu', function (Blueprint $table) {
                 $table->bigIncrements('id');
-                $table->unsignedBigInteger('parent_id')->default(0)->index();
-                $table->unsignedBigInteger('privilege_id')->default(0)->index();
-                $table->string('type')->default('main')->index();
                 $table->string('label')->index();
-                $table->string('icon')->index();
-                $table->text('url');
+                $table->text('description');
                 $table->timestamps();
             });
         } else {
             Schema::table('menu', function (Blueprint $table) {
-                Schema::hasColumn('menu', 'parent_id') or $table->unsignedBigInteger('parent_id')->default(0)->index();
-                Schema::hasColumn('menu', 'privilege_id') or $table->unsignedBigInteger('privilege_id')->default(0)->index();
-                Schema::hasColumn('menu', 'type') or $table->string('type')->default('main')->index();
                 Schema::hasColumn('menu', 'label') or $table->string('label')->index();
-                Schema::hasColumn('menu', 'icon') or $table->string('icon')->index();
-                Schema::hasColumn('menu', 'url') or $table->text('url');
+                Schema::hasColumn('menu', 'description') or $table->text('description');
                 Schema::hasColumn('menu', 'created_at') or $table->timestamp('created_at')->default(date('Y-m-d H:i:s'));
                 Schema::hasColumn('menu', 'updated_at') or $table->timestamp('updated_at')->default(date('Y-m-d H:i:s'));
             });
