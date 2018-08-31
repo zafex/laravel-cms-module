@@ -6,7 +6,7 @@ use Apiex\Entities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-trait ObjectPermission
+trait Permission
 {
     /**
      * @param Request $request
