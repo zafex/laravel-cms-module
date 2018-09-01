@@ -24,6 +24,9 @@ class ApiexServiceProvider extends LaravelServiceProvider
         Entities\User::observe(AuditLog::class);
         Entities\UserInfo::observe(AuditLog::class);
         Entities\UserPermission::observe(AuditLog::class);
+        Entities\Setting::observe(AuditLog::class);
+        Entities\Menu::observe(AuditLog::class);
+        Entities\MenuItem::observe(AuditLog::class);
     }
 
     public function register()

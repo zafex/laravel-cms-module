@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiex\Actions\Privilege;
+namespace Apiex\Actions\Menu;
 
 use Apiex\Entities;
 use Exception;

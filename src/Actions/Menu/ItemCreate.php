@@ -30,8 +30,8 @@ trait MasterCreate
             $item = new Entities\MenuItem;
             $item->label = $request->get('label');
             $item->description = $request->get('description');
-            $item->icon = $request->get('icon');
-            $item->url = $request->get('url');
+            $item->icon = $request->get('icon') ?: '#';
+            $item->url = $request->get('url') ?: '#';
             $item->menu_id = $request->get('menu_id');
             $item->parent_id = $request->get('parent_id') ?: 0;
             $item->privilege_id = $request->get('privilege_id') ?: 0;
