@@ -22,7 +22,6 @@ class AuditLog
             $audit->model_id = $model->getKey();
             $audit->browser = request()->header('User-Agent');
             $audit->action = 'CREATE';
-            $audit->request = json_encode(request()->all());
             if ($audit->save()) {
                 foreach ($model->getAttributes() as $key => $value) {
                     $detail = new AuditDetail;
@@ -51,7 +50,6 @@ class AuditLog
             $audit->model_id = $model->getKey();
             $audit->browser = request()->header('User-Agent');
             $audit->action = 'DELETE';
-            $audit->request = json_encode(request()->all());
             if ($audit->save()) {
                 foreach ($model->getAttributes() as $key => $value) {
                     $detail = new AuditDetail;
@@ -80,7 +78,6 @@ class AuditLog
             $audit->model_id = $model->getKey();
             $audit->browser = request()->header('User-Agent');
             $audit->action = 'UPDATE';
-            $audit->request = json_encode(request()->all());
             if ($audit->save()) {
                 $origins = $model->getOriginal();
                 foreach ($model->getAttributes() as $key => $value) {

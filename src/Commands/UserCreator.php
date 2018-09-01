@@ -10,28 +10,36 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class AdminCreator extends Command
+class UserCreator extends Command
 {
     /**
      * @var string
      */
-    protected $description = 'Create new admin';
+    protected $description = 'Create new user';
 
     /**
      * @var string
      */
-    protected $signature = 'apiex:create-admin';
+    protected $signature = 'apiex:create-user';
 
     /**
      * @return mixed
      */
     public function handle()
     {
+        return $this->createUser();
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function createUser()
+    {
         $roles = Privilege::where('section', 'role')->get()->map(function ($role) {
             return $role->name;
         })->toArray();
 
-        $roleName = $this->choice('Select Role Admin', $roles);
+        $roleName = $this->choice('Select Role', $roles);
         $role = Privilege::where('name', $roleName)->where('section', 'role')->first();
 
         $name = $this->ask('Type your username');
@@ -43,7 +51,7 @@ class AdminCreator extends Command
         $this->info('Email: ' . $email);
         $this->info('Assign to role ' . $roleName . ' which role_id=' . $role->id);
 
-        if ($this->confirm('Do you wish to continue ?')) {
+        if ($this->confirm('Do you wish to continue ?', 'yes')) {
 
             $credentials = [
                 'name' => $name,
@@ -63,6 +71,9 @@ class AdminCreator extends Command
                 foreach ($validator->errors()->all() as $error) {
                     $this->error($error);
                 }
+                if ($this->confirm('Try again ?', 'yes')) {
+                    return $this->createUser();
+                }
                 return 1;
             }
 
@@ -77,9 +88,15 @@ class AdminCreator extends Command
                     'role_id' => $role->id,
                     'user_id' => $user->id,
                 ]);
-                $this->info('Admin which user ' . $name . ' succesfully created with role ' . $roleName);
+                $this->info('User which username ' . $name . ' succesfully created with role ' . $roleName);
+                if ($this->confirm('Create user again ?', 'no')) {
+                    return $this->createUser();
+                }
             } catch (Exception $e) {
                 $this->error($e->getMessage());
+                if ($this->confirm('Try again ?', 'yes')) {
+                    return $this->createUser();
+                }
             }
         }
     }

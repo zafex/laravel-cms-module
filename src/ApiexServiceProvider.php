@@ -14,8 +14,8 @@ class ApiexServiceProvider extends LaravelServiceProvider
 
         $this->loadMigrationsFrom(dirname(__DIR__) . '/migrations');
 
-        $this->commands('apiex.command.admin-creator');
-        $this->commands('apiex.command.adminrole-generator');
+        $this->commands('apiex.command.user-creator');
+        $this->commands('apiex.command.admin-generator');
         $this->commands('apiex.command.permission-generator');
 
         Entities\Privilege::observe(AuditLog::class);
@@ -27,6 +27,9 @@ class ApiexServiceProvider extends LaravelServiceProvider
         Entities\Setting::observe(AuditLog::class);
         Entities\Menu::observe(AuditLog::class);
         Entities\MenuItem::observe(AuditLog::class);
+        Entities\Workflow::observe(AuditLog::class);
+        Entities\WorkflowStep::observe(AuditLog::class);
+        Entities\WorkflowVerificator::observe(AuditLog::class);
     }
 
     public function register()
@@ -37,8 +40,8 @@ class ApiexServiceProvider extends LaravelServiceProvider
         $this->app->bind('ResponseSingular', Common\ResponseSingular::class);
         $this->app->bind('ResponseCollection', Common\ResponseCollection::class);
 
-        $this->app->bind('apiex.command.admin-creator', Commands\AdminCreator::class);
-        $this->app->bind('apiex.command.adminrole-generator', Commands\AdminroleGenerator::class);
+        $this->app->bind('apiex.command.user-creator', Commands\UserCreator::class);
+        $this->app->bind('apiex.command.admin-generator', Commands\AdminGenerator::class);
         $this->app->bind('apiex.command.permission-generator', Commands\PermissionGenerator::class);
     }
 }
