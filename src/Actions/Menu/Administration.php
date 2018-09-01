@@ -39,10 +39,25 @@ trait Administration
     /**
      * @param Request $request
      */
+    public function delete(Request $request)
+    {
+        if ($menu = Entities\Menu::where('id', $request->get('id'))->first()) {
+            foreach ($menu->items() as $item) {
+                $item->delete();
+            }
+            $menu->delete();
+            return app('ResponseSingular')->setItem(__('Menu was successfully deleted.'))->send();
+        } else {
+            return app('ResponseError')->withMessage('menu_not_found')->send(404);
+        }
+    }
+
+    /**
+     * @param Request $request
+     */
     public function detail(Request $request)
     {
-        $id = $request->get('id');
-        if ($menu = Entities\Menu::where('id', $id)->first()) {
+        if ($menu = Entities\Menu::where('id', $request->get('id'))->first()) {
             $menu->load('items');
             return app('ResponseSingular')->setItem($menu)->send();
         }
@@ -80,9 +95,27 @@ trait Administration
     /**
      * @param Request $request
      */
-    public function save(Request $request)
+    public function update(Request $request)
     {
         if ($menu = Entities\Menu::where('id', $request->get('id'))->first()) {
+
+            $rules = [];
+            if ($request->has('label')) {
+                $rules['label'] = 'required|string|max:255';
+            }
+            if ($request->has('description')) {
+                $rules['description'] = 'required|string';
+            }
+            if ($rules) {
+                $validator = Validator::make($request->only(['label', 'description']), $rules);
+                if ($validator->fails()) {
+                    return app('ResponseError')->withValidation($validator, 'update_menu')->send();
+                }
+                foreach ($request->only(['label', 'description']) as $key => $value) {
+                    $menu->{$key} = $value;
+                }
+                $menu->save();
+            }
 
             $items = $request->get('items') ?: [];
             $itemIds = [];
@@ -105,38 +138,6 @@ trait Administration
 
         } else {
             return app('ResponseError')->withMessage('menu_not_found')->send(404);
-        }
-    }
-
-    /**
-     * @param Request $request
-     */
-    public function update(Request $request)
-    {
-        try {
-            $menu_id = $request->get('id');
-            $menu = Entities\Menu::where('id', $menu_id)->first();
-            if (!$menu) {
-                return app('ResponseError')->withMessage('menu_not_found')->send(404);
-            }
-
-            $validator = Validator::make($request->all(), [
-                'label' => 'required|string|max:255',
-                'description' => 'required',
-            ]);
-
-            if ($validator->fails()) {
-                return app('ResponseError')->withValidation($validator, 'update_menu')->send();
-            }
-
-            $menu->label = $request->get('label');
-            $menu->description = $request->get('description');
-            $menu->save();
-
-            return app('ResponseSingular')->setItem(__('Menu was successfully updated.'))->send();
-
-        } catch (Exception $e) {
-            return app('ResponseError')->withException($e)->send();
         }
     }
 }
