@@ -5,7 +5,7 @@ namespace Apiex\Actions\Privilege;
 use Apiex\Entities;
 use Illuminate\Http\Request;
 
-trait RoleAssignment
+trait Administration
 {
     /**
      * @param Request $request
