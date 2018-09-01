@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class MenuItem extends Migration
+class ApiexMenuItem extends Migration
 {
     /**
      * Reverse the migrations.
@@ -30,8 +30,9 @@ class MenuItem extends Migration
                 $table->unsignedBigInteger('parent_id')->default(0)->index();
                 $table->unsignedBigInteger('privilege_id')->default(0)->index();
                 $table->string('label')->index();
-                $table->string('icon')->index();
-                $table->text('url');
+                $table->string('description')->index();
+                $table->string('icon')->default('#');
+                $table->text('url')->default('#');
                 $table->timestamps();
             });
         } else {
@@ -40,8 +41,9 @@ class MenuItem extends Migration
                 Schema::hasColumn('menu_item', 'parent_id') or $table->unsignedBigInteger('parent_id')->default(0)->index();
                 Schema::hasColumn('menu_item', 'privilege_id') or $table->unsignedBigInteger('privilege_id')->default(0)->index();
                 Schema::hasColumn('menu_item', 'label') or $table->string('label')->index();
-                Schema::hasColumn('menu_item', 'icon') or $table->string('icon')->index();
-                Schema::hasColumn('menu_item', 'url') or $table->text('url');
+                Schema::hasColumn('menu_item', 'description') or $table->string('description')->index();
+                Schema::hasColumn('menu_item', 'icon') or $table->string('icon')->default('#');
+                Schema::hasColumn('menu_item', 'url') or $table->text('url')->default('#');
                 Schema::hasColumn('menu_item', 'created_at') or $table->timestamp('created_at')->default(date('Y-m-d H:i:s'));
                 Schema::hasColumn('menu_item', 'updated_at') or $table->timestamp('updated_at')->default(date('Y-m-d H:i:s'));
             });

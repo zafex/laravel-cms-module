@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class PrivilegeUser extends Migration
+class ApiexPrivilegeUser extends Migration
 {
     /**
      * Reverse the migrations.
