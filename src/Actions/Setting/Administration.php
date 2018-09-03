@@ -2,7 +2,6 @@
 
 namespace Apiex\Actions\Setting;
 
-use Apiex\Entities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -12,22 +11,10 @@ trait Administration
     /**
      * @param Request $request
      */
-    public function detail(Request $request)
+    public function load(Request $request)
     {
-        if ($opt = Entities\Setting::where('id', $request->get('id'))->first()) {
-            // do nothing
-        } elseif ($opt = Entities\Setting::where('section', $request->get('section'))->first()) {
-            // do nothing
-        } else {
-            return app('ResponseError')->withMessage(__('setting_not_found'))->send(404);
-        }
-        $value = json_decode($opt->value);
-        $options = [
-            'id' => $opt->id,
-            'section' => $opt->section,
-            'value' => json_last_error() === JSON_ERROR_NONE ? $value : $opt->value,
-        ];
-        return app('ResponseSingular')->setItem($options)->send();
+        $item = app('settings')->getOption($request->get('section'));
+        return app('ResponseSingular')->setItem($item)->send();
     }
 
     /**
@@ -51,9 +38,7 @@ trait Administration
                 'section' => 'required|string|max:255',
             ]);
             if (!$validator->fails()) {
-                Entities\Setting::updateOrCreate(compact('section'), [
-                    'value' => $value,
-                ]);
+                app('settings')->setOption($section, $value);
                 $successArray[] = __("{$section} was successfully stored.");
             }
         }
