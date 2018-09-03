@@ -25,15 +25,17 @@ add `'api.token' => \Apiex\Middleware\TokenAuthorization::class` to routeMiddlew
 php artisan migrate
 ```
 make sure your migrations folder is not contains :
-- user
-- user_info
+- audit
+- audit_detail
 - privilege
 - privilege_user
 - privilege_assignment
+- user
+- user_info
 - user_permission
-- audit
-- audit_detail
+- setting
 - menu
+- menu_item
 
 **Generate permissions base on route's name**
 ```
@@ -42,18 +44,18 @@ php artisan apiex:generate-permissions
 
 **Generate role for admin (all permissions)**
 ```
-php artisan apiex:generate-role-admin
+php artisan apiex:generate-admin
 ```
 
-**Create user for admin**
+**Create user**
 ```
-php artisan apiex:create-admin
+php artisan apiex:create-user
 ```
 
 -------------------------------------------------------------------------
 
 ## Actions
-**Apiex\Actions\Auth\Authentication && Apiex\Actions\Auth\Registration**
+**Apiex\Actions\Auth\Authentication**
 
 create Controller
 
@@ -68,9 +70,6 @@ class AuthController extends Controller
 {
     // trait Auth\Authentication has one method authenticate(for create jwt token)
     use Auth\Authentication;
-
-    // trait Auth\Registration has one method register (for user signup)
-    use Auth\Registration;
 }
 ```
 create Route
@@ -104,7 +103,13 @@ create Route
 // route name is required
 // use middleware api.token for verify jwt token and user permission
 Route::get('/me', 'MeController@detail')->middleware('api.token')->name('me.detail');
-Route::post('/me/update', 'MeController@update')->middleware('api.token')->name('me.update');
+Route::post('/me/update', [
+    'as' => 'me.update',
+    'uses' => 'MeController@update',
+    'middleware' => [
+        'api.token'
+    ]
+]);
 ```
 
 More Actions..
@@ -118,6 +123,9 @@ More Actions..
 
 **Apiex\Actions\User\MemberList**
 - index (for user list)
+
+**Apiex\Actions\User\MemberCreate**
+- create (for create user)
 
 **Apiex\Actions\User\MemberDetail**
 - detail (for individual detail user)

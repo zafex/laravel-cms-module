@@ -1,19 +1,18 @@
 <?php
 
-namespace Apiex\Actions\Auth;
+namespace Apiex\Actions\User;
 
 use Apiex\Entities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
-trait Registration
+trait MemberCreate
 {
     /**
      * @param Request $request
      */
-    public function register(Request $request)
+    public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:user',
@@ -22,7 +21,7 @@ trait Registration
         ]);
 
         if ($validator->fails()) {
-            return app('ResponseError')->withValidation($validator, 'register')->send();
+            return app('ResponseError')->withValidation($validator, 'create')->send();
         }
 
         $user = new Entities\User;
@@ -31,8 +30,6 @@ trait Registration
         $user->password = Hash::make($request->get('password'));
         $user->save();
 
-        $token = JWTAuth::fromUser($user);
-
-        return app('ResponseSingular')->setItem(compact('user', 'token'))->send(201);
+        return app('ResponseSingular')->setItem($user)->send(201);
     }
 }

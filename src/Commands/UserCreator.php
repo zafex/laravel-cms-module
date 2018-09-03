@@ -89,7 +89,7 @@ class UserCreator extends Command
                     'user_id' => $user->id,
                 ]);
                 $this->info('User which username ' . $name . ' succesfully created with role ' . $roleName);
-                if ($this->confirm('Create user again ?', 'no')) {
+                if ($this->confirm('Create user again ?')) {
                     return $this->createUser();
                 }
             } catch (Exception $e) {
