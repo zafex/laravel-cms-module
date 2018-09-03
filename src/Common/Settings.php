@@ -23,6 +23,11 @@ class Settings
     /**
      * @var mixed
      */
+    protected $name;
+
+    /**
+     * @var mixed
+     */
     protected $options = [];
 
     /**
@@ -33,16 +38,18 @@ class Settings
         $this->cache = $cache;
         $this->config = $config;
 
+        $this->name = $this->config->get('setting_cache_name') ?: 'settings';
+
         if (empty($this->options)) {
-            if ($this->cache->has('settings')) {
-                $this->options = $this->cache->get('settings');
+            if ($this->cache->has($this->name)) {
+                $this->options = $this->cache->get($this->name);
             } else {
                 $settings = Entities\Setting::all();
                 foreach ($settings as $setting) {
                     $value = json_decode($setting->value);
                     $this->options[$setting->section] = json_last_error() == JSON_ERROR_NONE ? $value : $setting->value;
                 }
-                $this->cache->put('settings', $this->options, $this->config->get('setting_cache_duration', 1));
+                $this->cache->put($this->name, $this->options, $this->config->get('setting_cache_duration', 1));
             }
         }
     }
@@ -76,7 +83,7 @@ class Settings
             'value' => $value,
         ]);
         $this->options[$section] = $data;
-        $this->cache->put('settings', $this->options, $this->config->get('setting_cache_duration', 1));
+        $this->cache->put($this->name, $this->options, $this->config->get('setting_cache_duration', 1));
         return $this;
     }
 }

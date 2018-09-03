@@ -2,6 +2,7 @@
 
 namespace Apiex;
 
+use Apiex\Common\Privileges;
 use Apiex\Common\Settings;
 use Apiex\Entities;
 use Apiex\Observers\AuditLog;
@@ -46,5 +47,6 @@ class ApiexServiceProvider extends LaravelServiceProvider
         $this->app->bind('apiex.command.permission-generator', Commands\PermissionGenerator::class);
 
         $this->app->singleton('settings', Settings::class);
+        $this->app->singleton('privileges', Privileges::class);
     }
 }

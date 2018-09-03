@@ -2,8 +2,6 @@
 
 namespace Apiex\Middleware;
 
-use Apiex\Entities\Privilege;
-use Apiex\Entities\UserPermission;
 use Closure;
 use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -25,27 +23,12 @@ class TokenAuthorization extends BaseMiddleware
     {
         try {
             $user = JWTAuth::parseToken()->authenticate();
-            $permission = Privilege::where('section', 'permission')->where('name', $request->route()->getName())->first();
+            $permission = $request->route()->getName();
 
-            if (!$user || !$permission) {
-                return app('ResponseError')->withMessage(__('page_not_found'))->send(404);
-            }
-
-            $userPermission = UserPermission::where('user_id', $user->id)->where('permission_id', $permission->id)->first();
-            $permissions = $user->permissions->map(function ($object) {
-                return $object->permission->id;
-            })->toArray();
-
-            if (!in_array($permission->id, $permissions)) {
-                if (!$userPermission) {
+            if (false == app('privileges')->hasAccess($permission, 'permission', null, $user->id)) {
+                $object_id = $request->isMethod('get') ? $request->query('id') : $request->input('id');
+                if (false == app('privileges')->hasAccess($permission, 'permission', $object_id, $user->id)) {
                     return app('ResponseError')->withMessage(__('not_allowed_access'))->send(403);
-                } else {
-                    if (
-                        ($request->isMethod('post') && $request->input('id') != $userPermission->object_id) ||
-                        ($request->isMethod('get') && $request->query('id') != $userPermission->object_id)
-                    ) {
-                        return app('ResponseError')->withMessage(__('not_allowed_access'))->send(403);
-                    }
                 }
             }
 
