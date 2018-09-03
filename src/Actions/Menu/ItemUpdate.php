@@ -36,7 +36,7 @@ trait ItemUpdate
             $item->icon = $request->get('icon') ?: '#';
             $item->url = $request->get('url') ?: '#';
             $item->privilege_id = $request->get('privilege_id') ?: 0;
-            $menu->save();
+            $item->save();
 
             return app('ResponseSingular')->setItem(__('Menu Item was successfully updated.'))->send();
 
