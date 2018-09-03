@@ -10,8 +10,16 @@ standard response rest based on https://developers.getbase.com
 - "tymon/jwt-auth": "dev-develop"
 - "lcobucci/jwt": "^3.2"
 - "ramsey/uuid": "^3.8"
+```json
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/zafex/apilaracms"
+        }
+    ]
+```
 ```bash
-composer require zafex/lara-apicms
+composer require zafex/apiexlara
 php artisan vendor:publish --provider="Apiex\ApiexServiceProvider"
 php artisan jwt:secret
 ```
