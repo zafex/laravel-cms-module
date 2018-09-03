@@ -1,6 +1,6 @@
 {
-    "name": "zafex/lara-apicms",
-    "description": "Laravel Api CMS.",
+    "name": "zafex/apiexlara",
+    "description": "Laravel Api.",
     "type": "package",
     "license": "MIT",
     "authors": [{
