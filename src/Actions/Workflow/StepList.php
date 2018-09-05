@@ -27,7 +27,7 @@ trait StepList
             ],
         ]);
         foreach ($model as $object) {
-            $object->load(['master', 'verificators']);
+            $object->load(['master', 'verificators.user']);
             $response->addCollection($object);
         }
 
