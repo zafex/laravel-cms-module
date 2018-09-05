@@ -18,4 +18,12 @@ class Workflow extends Model
     {
         return $this->hasMany(WorkflowStep::class);
     }
+
+    /**
+     * @return mixed
+     */
+    public function verificators()
+    {
+        return $this->hasManyThrough(WorkflowVerificator::class, WorkflowStep::class);
+    }
 }

@@ -27,7 +27,7 @@ class TokenAuthorization extends BaseMiddleware
 
             if (false == app('privileges')->hasAccess($permission, 'permission', null, $user->id)) {
                 $object_id = $request->isMethod('get') ? $request->query('id') : $request->input('id');
-                if (false == app('privileges')->hasAccess($permission, 'permission', $object_id, $user->id)) {
+                if (false == app('privileges')->hasAccess($permission, 'permission', $object_id ?: null, $user->id)) {
                     return app('ResponseError')->withMessage(__('not_allowed_access'))->send(403);
                 }
             }

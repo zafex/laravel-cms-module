@@ -14,6 +14,14 @@ class WorkflowStep extends Model
     /**
      * @return mixed
      */
+    public function master()
+    {
+        return $this->belongsTo(Workflow::class);
+    }
+
+    /**
+     * @return mixed
+     */
     public function verificators()
     {
         return $this->hasMany(WorkflowVerificator::class);

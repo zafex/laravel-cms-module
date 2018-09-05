@@ -62,6 +62,7 @@ class Privileges
                 $this->users = Arr::get($privileges, 'users', []);
                 $this->roles = Arr::get($privileges, 'roles', []);
                 $this->items = Arr::get($privileges, 'items', []);
+                $this->myids = Arr::get($privileges, 'myids', []);
             } else {
                 $roles = [];
                 $permissions = [];
@@ -114,7 +115,7 @@ class Privileges
     /**
      * @param $privilege
      * @param $section
-     * @param $object_id
+     * @param null         $object_id
      * @param null         $user_id
      */
     public function hasAccess($privilege, $section = null, $object_id = null, $user_id = null)
