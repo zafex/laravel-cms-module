@@ -2,8 +2,6 @@
 
 namespace Apiex;
 
-use Apiex\Common\Privileges;
-use Apiex\Common\Settings;
 use Apiex\Entities;
 use Apiex\Observers\AuditLog;
 use Tymon\JWTAuth\Providers\LaravelServiceProvider;
@@ -46,7 +44,7 @@ class ApiexServiceProvider extends LaravelServiceProvider
         $this->app->bind('apiex.command.admin-generator', Commands\AdminGenerator::class);
         $this->app->bind('apiex.command.permission-generator', Commands\PermissionGenerator::class);
 
-        $this->app->singleton('settings', Settings::class);
-        $this->app->singleton('privileges', Privileges::class);
+        $this->app->singleton('settings', Helpers\Settings::class);
+        $this->app->singleton('privileges', Helpers\Privileges::class);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Apiex\Common;
+namespace Apiex\Helpers;
 
 use Apiex\Entities;
 use Closure;
