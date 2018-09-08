@@ -12,7 +12,7 @@ class ApiexServiceProvider extends LaravelServiceProvider
     {
         parent::boot();
 
-        $this->loadMigrationsFrom(dirname(__DIR__) . '/migrations');
+        $this->publishMigrations('2018_09_01_125300_apiex');
 
         $this->commands('apiex.command.user-creator');
         $this->commands('apiex.command.admin-generator');
@@ -46,5 +46,29 @@ class ApiexServiceProvider extends LaravelServiceProvider
 
         $this->app->singleton('settings', Helpers\Settings::class);
         $this->app->singleton('privileges', Helpers\Privileges::class);
+    }
+
+    /**
+     * @param $prefix
+     */
+    protected function publishMigrations($prefix)
+    {
+        $path = dirname(__DIR__) . '/migrations';
+        $this->publishes([
+            $path . '/{$prefix}_audit.php' => database_path("migrations/{$prefix}_audit.php"),
+            $path . '/{$prefix}_audit_detail.php' => database_path("migrations/{$prefix}_audit_detail.php"),
+            $path . '/{$prefix}_menu.php' => database_path("migrations/{$prefix}_menu.php"),
+            $path . '/{$prefix}_menu_item.php' => database_path("migrations/{$prefix}_menu_item.php"),
+            $path . '/{$prefix}_privilege.php' => database_path("migrations/{$prefix}_privilege.php"),
+            $path . '/{$prefix}_privilege_assignment.php' => database_path("migrations/{$prefix}_privilege_assignment.php"),
+            $path . '/{$prefix}_privilege_user.php' => database_path("migrations/{$prefix}_privilege_user.php"),
+            $path . '/{$prefix}_setting.php' => database_path("migrations/{$prefix}_setting.php"),
+            $path . '/{$prefix}_user.php' => database_path("migrations/{$prefix}_user.php"),
+            $path . '/{$prefix}_user_info.php' => database_path("migrations/{$prefix}_user_info.php"),
+            $path . '/{$prefix}_user_permission.php' => database_path("migrations/{$prefix}_user_permission.php"),
+            $path . '/{$prefix}_workflow.php' => database_path("migrations/{$prefix}_workflow.php"),
+            $path . '/{$prefix}_workflow_step.php' => database_path("migrations/{$prefix}_workflow_step.php"),
+            $path . '/{$prefix}_workflow_verificator.php' => database_path("migrations/{$prefix}_workflow_verificator.php"),
+        ], 'migrations');
     }
 }
