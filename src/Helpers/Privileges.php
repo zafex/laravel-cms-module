@@ -7,9 +7,15 @@ use Exception;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Contracts\Config\Repository as ConfigContract;
 use Illuminate\Support\Arr;
+use Tymon\JWTAuth\JWTAuth;
 
 class Privileges
 {
+    /**
+     * @var mixed
+     */
+    protected $auth;
+
     /**
      * @var mixed
      */
@@ -49,10 +55,11 @@ class Privileges
      * @param CacheContract  $cache
      * @param ConfigContract $config
      */
-    public function __construct(CacheContract $cache, ConfigContract $config)
+    public function __construct(CacheContract $cache, ConfigContract $config, JWTAuth $auth)
     {
         $this->cache = $cache;
         $this->config = $config;
+        $this->auth = $auth;
         $this->name = $this->config->get('privilege_cache_name') ?: 'privileges';
         if (empty($this->items) && $this->cache->has($this->name)) {
             $privileges = $this->cache->get($this->name) ?: [];
@@ -73,7 +80,11 @@ class Privileges
     {
         try {
             if (empty($user_id)) {
-                $user_id = auth()->user()->id;
+                $token = $this->auth->parseToken();
+                $user_id = $token->getPayload()->get('sub');
+                if (empty($user_id)) {
+                    return false;
+                }
             }
 
             if (!empty($object_id) && $section == 'permission') {
