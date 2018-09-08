@@ -7,11 +7,23 @@ use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
+use Tymon\JWTAuth\JWTAuth;
 
-class TokenAuthorization extends BaseMiddleware
+class TokenAuthorization
 {
+    /**
+     * @var mixed
+     */
+    protected $auth;
+
+    /**
+     * @param JWTAuth $auth
+     */
+    public function __construct(JWTAuth $auth)
+    {
+        $this->auth = $auth;
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -22,12 +34,17 @@ class TokenAuthorization extends BaseMiddleware
     public function handle($request, Closure $next)
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            if (!$this->auth->parser()->setRequest($request)->hasToken()) {
+                throw new JWTException('Token not provided');
+            }
+
+            $token = $this->auth->parseToken();
+            $user_id = $token->getPayload()->get('sub');
             $permission = $request->route()->getName();
 
-            if (false == app('privileges')->hasAccess($permission, 'permission', null, $user->id)) {
+            if (false == app('privileges')->hasAccess($permission, 'permission', null, $user_id)) {
                 $object_id = $request->isMethod('get') ? $request->query('id') : $request->input('id');
-                if (false == app('privileges')->hasAccess($permission, 'permission', $object_id ?: null, $user->id)) {
+                if (false == app('privileges')->hasAccess($permission, 'permission', $object_id ?: null, $user_id)) {
                     return app('ResponseError')->withMessage(__('not_allowed_access'))->send(403);
                 }
             }
