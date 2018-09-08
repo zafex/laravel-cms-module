@@ -71,7 +71,7 @@ class Settings
                 $value = json_decode($setting->value);
                 $this->options[$setting->section] = json_last_error() == JSON_ERROR_NONE ? $value : $setting->value;
             }
-            $this->cache->put($this->name, $this->options, $this->config->get('setting_cache_duration', 1));
+            $this->cache->forever($this->name, $this->options);
         } catch (Exception $e) {
             // do nothing
         }

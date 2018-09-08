@@ -139,7 +139,7 @@ class Privileges
                 'items' => $this->items,
                 'myids' => $this->myids,
             ];
-            $this->cache->put($this->name, $data, $this->config->get('privilege_cache_duration', 1));
+            $this->cache->forever($this->name, $data);
         } catch (Exception $e) {
             // do nothing
         }
