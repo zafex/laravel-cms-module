@@ -36,6 +36,9 @@ trait Authentication
         // re-cache all privileges
         app('privileges')->load();
 
+        // re-cache all settings information
+        app('settings')->load();
+
         return app('ResponseSingular')->setItem($token)->send(200);
     }
 }
