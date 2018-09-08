@@ -2,6 +2,7 @@
 
 namespace Apiex\Actions\Setting;
 
+use Apiex\Entities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +14,7 @@ trait Administration
      */
     public function load(Request $request)
     {
-        $item = app('settings')->getOption($request->get('section'));
+        $item = app('settings')->fetch($request->get('section'));
         return app('ResponseSingular')->setItem($item)->send();
     }
 
@@ -38,11 +39,14 @@ trait Administration
                 'section' => 'required|string|max:255',
             ]);
             if (!$validator->fails()) {
-                app('settings')->setOption($section, $value);
+                Entities\Setting::updateOrCreate(compact('section'), [
+                    'value' => $value,
+                ]);
                 $successArray[] = __("{$section} was successfully stored.");
             }
         }
         if ($successArray) {
+            app('settings')->load();
             $response = app('ResponseCollection');
             foreach ($successArray as $success) {
                 $response->addCollection($success);

@@ -53,62 +53,13 @@ class Privileges
     {
         $this->cache = $cache;
         $this->config = $config;
-
         $this->name = $this->config->get('privilege_cache_name') ?: 'privileges';
-
-        if (empty($this->items)) {
-            if ($this->cache->has($this->name)) {
-                $privileges = $this->cache->get($this->name) ?: [];
-                $this->users = Arr::get($privileges, 'users', []);
-                $this->roles = Arr::get($privileges, 'roles', []);
-                $this->items = Arr::get($privileges, 'items', []);
-                $this->myids = Arr::get($privileges, 'myids', []);
-            } else {
-                $roles = [];
-                $permissions = [];
-                $privileges = Entities\Privilege::all();
-                $assignments = Entities\PrivilegeAssignment::all();
-                $users = Entities\PrivilegeUser::all();
-                $myids = Entities\UserPermission::all();
-                foreach ($privileges as $privilege) {
-                    if ($privilege->section == 'role') {
-                        $roles[$privilege->id] = $privilege->toArray();
-                    } else {
-                        $permissions[$privilege->id] = $privilege->toArray();
-                    }
-                }
-                foreach ($assignments as $assignment) {
-                    if (array_key_exists($assignment->role_id, $roles)) {
-                        if (array_key_exists($assignment->permission_id, $permissions)) {
-                            $this->items[$assignment->role_id][] = $permissions[$assignment->permission_id]['name'];
-                        }
-                    }
-                }
-                foreach ($users as $user) {
-                    if (array_key_exists($user->role_id, $roles)) {
-                        $this->roles[$user->user_id][] = $roles[$user->role_id]['name'];
-                        $this->users[$user->user_id][] = $roles[$user->role_id]['name'];
-                        if (array_key_exists($user->role_id, $this->items)) {
-                            $this->users[$user->user_id] = array_merge(
-                                $this->users[$user->user_id],
-                                $this->items[$user->role_id]
-                            );
-                        }
-                    }
-                }
-                foreach ($myids as $myid) {
-                    if (array_key_exists($myid->permission_id, $permissions)) {
-                        $this->myids[$myid->user_id][$permissions[$myid->permission_id]['name']] = $myid->object_id;
-                    }
-                }
-                $data = [
-                    'users' => $this->users,
-                    'roles' => $this->roles,
-                    'items' => $this->items,
-                    'myids' => $this->myids,
-                ];
-                $this->cache->put($this->name, $data, $this->config->get('privilege_cache_duration', 1));
-            }
+        if (empty($this->items) && $this->cache->has($this->name)) {
+            $privileges = $this->cache->get($this->name) ?: [];
+            $this->users = Arr::get($privileges, 'users', []);
+            $this->roles = Arr::get($privileges, 'roles', []);
+            $this->items = Arr::get($privileges, 'items', []);
+            $this->myids = Arr::get($privileges, 'myids', []);
         }
     }
 
@@ -139,6 +90,58 @@ class Privileges
             }
         } catch (Exception $e) {
             return app('ResponseError')->withException($e)->send();
+        }
+    }
+
+    public function load()
+    {
+        try {
+            $roles = [];
+            $permissions = [];
+            $privileges = Entities\Privilege::all();
+            $assignments = Entities\PrivilegeAssignment::all();
+            $users = Entities\PrivilegeUser::all();
+            $myids = Entities\UserPermission::all();
+            foreach ($privileges as $privilege) {
+                if ($privilege->section == 'role') {
+                    $roles[$privilege->id] = $privilege->toArray();
+                } else {
+                    $permissions[$privilege->id] = $privilege->toArray();
+                }
+            }
+            foreach ($assignments as $assignment) {
+                if (array_key_exists($assignment->role_id, $roles)) {
+                    if (array_key_exists($assignment->permission_id, $permissions)) {
+                        $this->items[$assignment->role_id][] = $permissions[$assignment->permission_id]['name'];
+                    }
+                }
+            }
+            foreach ($users as $user) {
+                if (array_key_exists($user->role_id, $roles)) {
+                    $this->roles[$user->user_id][] = $roles[$user->role_id]['name'];
+                    $this->users[$user->user_id][] = $roles[$user->role_id]['name'];
+                    if (array_key_exists($user->role_id, $this->items)) {
+                        $this->users[$user->user_id] = array_merge(
+                            $this->users[$user->user_id],
+                            $this->items[$user->role_id]
+                        );
+                    }
+                }
+            }
+            foreach ($myids as $myid) {
+                if (array_key_exists($myid->permission_id, $permissions)) {
+                    $this->myids[$myid->user_id][$permissions[$myid->permission_id]['name']] = $myid->object_id;
+                }
+            }
+            $data = [
+                'users' => $this->users,
+                'roles' => $this->roles,
+                'items' => $this->items,
+                'myids' => $this->myids,
+            ];
+            $this->cache->put($this->name, $data, $this->config->get('privilege_cache_duration', 1));
+        } catch (Exception $e) {
+            // do nothing
         }
     }
 }

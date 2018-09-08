@@ -33,6 +33,9 @@ trait Authentication
             return app('ResponseError')->withMessage(__('could_not_create_token'))->send(500);
         }
 
+        // re-cache all privileges
+        app('privileges')->load();
+
         return app('ResponseSingular')->setItem($token)->send(200);
     }
 }
