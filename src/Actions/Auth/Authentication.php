@@ -4,7 +4,9 @@ namespace Apiex\Actions\Auth;
 
 /**
  * @package zafex/apiexlara
+ *
  * @author Fajrul Akbar Zuhdi <fajrulaz@gmail.com>
+ *
  * @link https://github.com/zafex
  */
 
@@ -34,7 +36,8 @@ trait Authentication
         }
 
         try {
-            if (!$token = JWTAuth::attempt($credentials)) {
+            $token = JWTAuth::attempt($credentials);
+            if (!$token) {
                 return app('ResponseError')->withMessage(__('invalid_credentials'))->send(400);
             }
         } catch (JWTException $e) {
