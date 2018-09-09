@@ -47,6 +47,7 @@ class ApiexServiceProvider extends LaravelServiceProvider
         $this->app->bind('ResponseError', Common\ResponseError::class);
         $this->app->bind('ResponseSingular', Common\ResponseSingular::class);
         $this->app->bind('ResponseCollection', Common\ResponseCollection::class);
+        $this->app->bind('LogCreation', Common\LogCreation::class);
 
         $this->app->bind('apiex.command.user-creator', Commands\UserCreator::class);
         $this->app->bind('apiex.command.admin-generator', Commands\AdminGenerator::class);

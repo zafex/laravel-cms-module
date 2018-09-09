@@ -15,14 +15,14 @@ use Apiex\Helpers\Settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\JWTAuth;
 
 trait Authentication
 {
     /**
      * @param Request $request
      */
-    public function authenticate(Request $request, Privileges $privileges, Settings $settings)
+    public function authenticate(Request $request, Privileges $privileges, Settings $settings, JWTAuth $auth)
     {
         $credentials = $request->only('name', 'password');
 
@@ -36,10 +36,14 @@ trait Authentication
         }
 
         try {
-            $token = JWTAuth::attempt($credentials);
+            $token = $auth->attempt($credentials);
+
             if (!$token) {
                 return app('ResponseError')->withMessage(__('invalid_credentials'))->send(400);
             }
+
+            app('LogCreation')->make('LOGIN', $auth->user());
+
         } catch (JWTException $e) {
             return app('ResponseError')->withMessage(__('could_not_create_token'))->send(500);
         }

@@ -16,17 +16,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Tymon\JWTAuth\JWTAuth;
 
 trait Information
 {
     /**
      * @param Request $request
      */
-    public function detail(Request $request)
+    public function detail(Request $request, JWTAuth $auth)
     {
-        $user = auth()->user()->load('details');
+        $token = $auth->parseToken();
+        $user = $token->authenticate();
+        $payload = $token->getPayload();
 
-        return app('ResponseSingular')->setItem($user)->send();
+        return app('ResponseSingular')->setItem(compact('user', 'payload'))->send();
     }
 
     /**

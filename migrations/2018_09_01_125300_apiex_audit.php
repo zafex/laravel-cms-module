@@ -32,6 +32,7 @@ class ApiexAudit extends Migration
                 $table->unsignedBigInteger('model_id')->index();
                 $table->string('action')->index();
                 $table->text('browser');
+                $table->string('ip')->default('127.0.0.1')->index();
                 $table->timestamps();
             });
         } else {
@@ -42,6 +43,7 @@ class ApiexAudit extends Migration
                 Schema::hasColumn('audit', 'model_id') or $table->unsignedBigInteger('model_id')->index();
                 Schema::hasColumn('audit', 'action') or $table->string('action')->index();
                 Schema::hasColumn('audit', 'browser') or $table->text('browser');
+                Schema::hasColumn('audit', 'ip') or $table->string('ip')->default('127.0.0.1')->index();
                 Schema::hasColumn('audit', 'created_at') or $table->timestamp('created_at')->default(date('Y-m-d H:i:s'));
                 Schema::hasColumn('audit', 'updated_at') or $table->timestamp('updated_at')->default(date('Y-m-d H:i:s'));
             });
