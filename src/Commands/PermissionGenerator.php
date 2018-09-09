@@ -2,6 +2,12 @@
 
 namespace Apiex\Commands;
 
+/**
+ * @package zafex/apiexlara
+ * @author Fajrul Akbar Zuhdi <fajrulaz@gmail.com>
+ * @link https://github.com/zafex
+ */
+
 use Apiex\Entities\Privilege;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Route;

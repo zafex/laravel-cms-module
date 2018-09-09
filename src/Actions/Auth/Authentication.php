@@ -2,6 +2,12 @@
 
 namespace Apiex\Actions\Auth;
 
+/**
+ * @package zafex/apiexlara
+ * @author Fajrul Akbar Zuhdi <fajrulaz@gmail.com>
+ * @link https://github.com/zafex
+ */
+
 use Apiex\Helpers\Privileges;
 use Apiex\Helpers\Settings;
 use Illuminate\Http\Request;

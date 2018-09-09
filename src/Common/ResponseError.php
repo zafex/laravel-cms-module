@@ -2,6 +2,12 @@
 
 namespace Apiex\Common;
 
+/**
+ * @package zafex/apiexlara
+ * @author Fajrul Akbar Zuhdi <fajrulaz@gmail.com>
+ * @link https://github.com/zafex
+ */
+
 use Apiex\Methods\ResponseTrait;
 use Exception;
 use Illuminate\Contracts\Validation\Validator as ValidatorInterface;

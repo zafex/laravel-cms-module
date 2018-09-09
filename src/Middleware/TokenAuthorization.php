@@ -2,6 +2,12 @@
 
 namespace Apiex\Middleware;
 
+/**
+ * @package zafex/apiexlara
+ * @author Fajrul Akbar Zuhdi <fajrulaz@gmail.com>
+ * @link https://github.com/zafex
+ */
+
 use Closure;
 use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;

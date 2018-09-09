@@ -2,6 +2,12 @@
 
 namespace Apiex\Actions\Setting;
 
+/**
+ * @package zafex/apiexlara
+ * @author Fajrul Akbar Zuhdi <fajrulaz@gmail.com>
+ * @link https://github.com/zafex
+ */
+
 use Apiex\Entities;
 use Apiex\Helpers;
 use Illuminate\Http\Request;

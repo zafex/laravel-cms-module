@@ -2,6 +2,12 @@
 
 namespace Apiex\Observers;
 
+/**
+ * @package zafex/apiexlara
+ * @author Fajrul Akbar Zuhdi <fajrulaz@gmail.com>
+ * @link https://github.com/zafex
+ */
+
 use Apiex\Entities\Audit;
 use Apiex\Entities\AuditDetail;
 use Exception;

@@ -2,6 +2,12 @@
 
 namespace Apiex\Actions\Audit;
 
+/**
+ * @package zafex/apiexlara
+ * @author Fajrul Akbar Zuhdi <fajrulaz@gmail.com>
+ * @link https://github.com/zafex
+ */
+
 use Apiex\Entities\Audit as LogModel;
 use Illuminate\Http\Request;
 

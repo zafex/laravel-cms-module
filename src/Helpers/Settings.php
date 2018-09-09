@@ -2,6 +2,12 @@
 
 namespace Apiex\Helpers;
 
+/**
+ * @package zafex/apiexlara
+ * @author Fajrul Akbar Zuhdi <fajrulaz@gmail.com>
+ * @link https://github.com/zafex
+ */
+
 use Apiex\Entities;
 use Closure;
 use Exception;
