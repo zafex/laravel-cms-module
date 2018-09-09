@@ -2,6 +2,8 @@
 
 namespace Apiex\Actions\Auth;
 
+use Apiex\Helpers\Privileges;
+use Apiex\Helpers\Settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -12,7 +14,7 @@ trait Authentication
     /**
      * @param Request $request
      */
-    public function authenticate(Request $request)
+    public function authenticate(Request $request, Privileges $privileges, Settings $settings)
     {
         $credentials = $request->only('name', 'password');
 
@@ -34,10 +36,10 @@ trait Authentication
         }
 
         // re-cache all privileges
-        app('privileges')->load();
+        $privileges->load();
 
         // re-cache all settings information
-        app('settings')->load();
+        $settings->load();
 
         return app('ResponseSingular')->setItem($token)->send(200);
     }

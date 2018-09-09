@@ -44,6 +44,11 @@ class Privileges
     /**
      * @var array
      */
+    protected $privs = [];
+
+    /**
+     * @var array
+     */
     protected $roles = [];
 
     /**
@@ -61,13 +66,22 @@ class Privileges
         $this->config = $config;
         $this->auth = $auth;
         $this->name = $this->config->get('privilege_cache_name') ?: 'privileges';
-        if (empty($this->items) && $this->cache->has($this->name)) {
+        if (empty($this->privs) && $this->cache->has($this->name)) {
             $privileges = $this->cache->get($this->name) ?: [];
             $this->users = Arr::get($privileges, 'users', []);
             $this->roles = Arr::get($privileges, 'roles', []);
             $this->items = Arr::get($privileges, 'items', []);
             $this->myids = Arr::get($privileges, 'myids', []);
+            $this->privs = Arr::get($privileges, 'privs', []);
         }
+    }
+
+    /**
+     * @param $id
+     */
+    public function fetch($id)
+    {
+        return Arr::get($this->privs, $id) ?: [];
     }
 
     /**
@@ -114,10 +128,11 @@ class Privileges
             $users = Entities\PrivilegeUser::all();
             $myids = Entities\UserPermission::all();
             foreach ($privileges as $privilege) {
+                $this->privs[$privilege->id] = $privilege->toArray();
                 if ($privilege->section == 'role') {
-                    $roles[$privilege->id] = $privilege->toArray();
+                    $roles[$privilege->id] = $this->privs[$privilege->id];
                 } else {
-                    $permissions[$privilege->id] = $privilege->toArray();
+                    $permissions[$privilege->id] = $this->privs[$privilege->id];
                 }
             }
             foreach ($assignments as $assignment) {
@@ -149,6 +164,7 @@ class Privileges
                 'roles' => $this->roles,
                 'items' => $this->items,
                 'myids' => $this->myids,
+                'privs' => $this->privs,
             ];
             $this->cache->forever($this->name, $data);
         } catch (Exception $e) {

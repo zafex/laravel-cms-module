@@ -3,6 +3,7 @@
 namespace Apiex\Actions\Setting;
 
 use Apiex\Entities;
+use Apiex\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -12,16 +13,16 @@ trait Administration
     /**
      * @param Request $request
      */
-    public function load(Request $request)
+    public function load(Request $request, Helpers\Settings $settings)
     {
-        $item = app('settings')->fetch($request->get('section'));
+        $item = $settings->fetch($request->get('section'));
         return app('ResponseSingular')->setItem($item)->send();
     }
 
     /**
      * @param Request $request
      */
-    public function store(Request $request)
+    public function store(Request $request, Helpers\Settings $settings)
     {
         $options = $request->all();
         $successArray = [];
@@ -46,7 +47,7 @@ trait Administration
             }
         }
         if ($successArray) {
-            app('settings')->load();
+            $settings->load();
             $response = app('ResponseCollection');
             foreach ($successArray as $success) {
                 $response->addCollection($success);
