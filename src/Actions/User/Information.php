@@ -11,13 +11,13 @@ namespace Apiex\Actions\User;
  */
 
 use Apiex\Entities;
+use Apiex\Helpers\Privileges;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Tymon\JWTAuth\JWTAuth;
-use Apiex\Helpers\Privileges;
 
 trait Information
 {
@@ -28,7 +28,6 @@ trait Information
     {
         $token = $auth->parseToken();
         $user = $token->authenticate();
-        $payload = $token->getPayload();
         $privileges = $priv->all();
 
         return app('ResponseSingular')->setItem(compact('user', 'payload', 'privileges'))->send();
@@ -37,11 +36,12 @@ trait Information
     /**
      * @param Request $request
      */
-    public function update(Request $request)
+    public function update(Request $request, JWTAuth $auth)
     {
         try {
 
-            $user = auth()->user();
+            $token = $auth->parseToken();
+            $user = $token->authenticate();
             $user_id = $user->id;
 
             $rules = [];
