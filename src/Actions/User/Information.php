@@ -17,19 +17,21 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Tymon\JWTAuth\JWTAuth;
+use Apiex\Helpers\Privileges;
 
 trait Information
 {
     /**
      * @param Request $request
      */
-    public function detail(Request $request, JWTAuth $auth)
+    public function detail(Request $request, JWTAuth $auth, Privileges $priv)
     {
         $token = $auth->parseToken();
         $user = $token->authenticate();
         $payload = $token->getPayload();
+        $privileges = $priv->all();
 
-        return app('ResponseSingular')->setItem(compact('user', 'payload'))->send();
+        return app('ResponseSingular')->setItem(compact('user', 'payload', 'privileges'))->send();
     }
 
     /**

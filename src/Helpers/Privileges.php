@@ -85,6 +85,21 @@ class Privileges
     }
 
     /**
+     * @param $user
+     */
+    public function all($user = null)
+    {
+        if (empty($user)) {
+            $token = $this->auth->parseToken();
+            $user = $token->getPayload()->get('sub');
+            if (empty($user)) {
+                return [];
+            }
+        }
+        return Arr::get($this->users, $user) ?: [];
+    }
+
+    /**
      * @param $id
      */
     public function fetch($id)
@@ -129,6 +144,12 @@ class Privileges
     public function load()
     {
         try {
+            $this->users = [];
+            $this->roles = [];
+            $this->items = [];
+            $this->myids = [];
+            $this->privs = [];
+
             $roles = [];
             $permissions = [];
             $privileges = Entities\Privilege::all();

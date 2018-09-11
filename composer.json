@@ -16,8 +16,9 @@
     },
     "require": {
         "laravel/framework": "^5",
-        "tymon/jwt-auth": "dev-develop",
+        "tymon/jwt-auth": "^1.0",
         "lcobucci/jwt": "^3.2",
-        "ramsey/uuid": "^3.8"
+        "ramsey/uuid": "^3.8",
+        "guzzlehttp/guzzle": "^6.3"
     }
 }
