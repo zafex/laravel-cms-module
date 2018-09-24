@@ -20,7 +20,10 @@ use Tymon\JWTAuth\JWTAuth;
 trait Authentication
 {
     /**
-     * @param Request $request
+     * @param Request    $request
+     * @param Privileges $privileges
+     * @param Settings   $settings
+     * @param JWTAuth    $auth
      */
     public function authenticate(Request $request, Privileges $privileges, Settings $settings, JWTAuth $auth)
     {
@@ -55,5 +58,45 @@ trait Authentication
         $settings->load();
 
         return app('ResponseSingular')->setItem($token)->send(200);
+    }
+
+    /**
+     * @param Request    $request
+     * @param Privileges $privileges
+     * @param Settings   $settings
+     * @param JWTAuth    $auth
+     */
+    public function revalidate(Request $request, Privileges $privileges, Settings $settings, JWTAuth $auth)
+    {
+        try {
+
+            if (!$auth->parser()->setRequest($request)->hasToken()) {
+                throw new JWTException('Token not provided');
+            }
+
+            $token = $auth->parseToken();
+
+            if ($authenticate = $token->authenticate()) {
+                // re-cache all privileges
+                $privileges->load();
+                // re-cache all settings information
+                $settings->load();
+
+                return app('ResponseSingular')->setItem($token)->send();
+            }
+
+            throw new Exception(__('user_not_found'));
+
+        } catch (Exception $e) {
+            if ($e instanceof TokenInvalidException) {
+                return app('ResponseError')->withMessage(__('token_invalid'))->send(400);
+            } elseif ($e instanceof TokenExpiredException) {
+                return app('ResponseError')->withMessage(__('token_expired'))->send(400);
+            } elseif ($e instanceof JWTException) {
+                return app('ResponseError')->withMessage(__('authorization_token_not_found'))->send(400);
+            } else {
+                return app('ResponseError')->withException($e)->send();
+            }
+        }
     }
 }
